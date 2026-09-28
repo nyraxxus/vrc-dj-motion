@@ -78,7 +78,7 @@ MIDI ch は 1 から数えた番号です(プログラム内部は 0 から)。�
 
 | 操作 | 番号 | 種類 |
 |---|---|---|
-| MIC LEVEL(推定) | CC 5 / 37 | 14bit |
+| MIC LEVEL | CC 5 / 37 | 14bit |
 | MASTER LEVEL | CC 8 / 40 | 14bit |
 | HEADPHONES MIXING | CC 12 / 44 | 14bit |
 | HEADPHONES LEVEL | CC 13 / 45 | 14bit |
@@ -87,10 +87,10 @@ MIDI ch は 1 から数えた番号です(プログラム内部は 0 から)。�
 | クロスフェーダー | CC 31 / 63 | 14bit |
 | ロータリーセレクター | CC 64 | 回転量 |
 | ロータリーセレクター +SHIFT | CC 100 | 回転量 |
-| SMART CFX(推定) | note 0 | ボタン |
-| SMART FADER(推定) | note 1 | ボタン |
-| SMART CFX(推定) +SHIFT | note 8 | ボタン |
-| SMART FADER(推定) +SHIFT | note 9 | ボタン |
+| SMART CFX | note 0 | ボタン |
+| SMART FADER | note 1 | ボタン |
+| SMART CFX +SHIFT | note 8 | ボタン |
+| SMART FADER +SHIFT | note 9 | ボタン |
 | ロータリーセレクター押し | note 65 | ボタン |
 | ロータリーセレクター押し +SHIFT | note 66 | ボタン |
 | LOAD(左デッキ) | note 70 | ボタン |
