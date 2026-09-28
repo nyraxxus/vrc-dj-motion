@@ -3,8 +3,9 @@
 DDJ-FLX4 の MIDI 入力に合わせて、VRChat アバターを OSC で「それっぽく」動かすためのプログラムです。
 VRChat はデスクトップモード、DJ ソフトは rekordbox(予備に Mixxx)を想定しています。
 
-今入っているのは、本体を作る前の確認用ツールと、FLX4 の操作の解読部分です。
+今入っているもの:
 
+- `vrcdj.run`: 本体。FLX4 の操作に合わせてアバターパラメーターを VRChat に送る
 - `vrcdj.monitor`: FLX4 から届く MIDI を表示・記録する
 - `vrcdj.osctest`: VRChat に OSC を送る、VRChat から届く OSC を表示する
 - `vrcdj.flx4`: FLX4 の MIDI を「どの操作か」に変換する(一覧は [docs/flx4-controls.md](docs/flx4-controls.md))
@@ -69,6 +70,23 @@ python -m vrcdj.osctest param DJ_HandL 1      # 整数
 python -m vrcdj.osctest param DJ_XFader 0.5   # 小数
 python -m vrcdj.osctest param DJ_Active true  # true / false
 ```
+
+## 本体を動かす
+
+アバター側に `docs/avatar-parameters.md` のパラメーターを用意してから使います。
+
+```powershell
+python -m vrcdj.run --verbose
+```
+
+VRChat やアバターの準備がまだでも、次の方法で動きを確認できます。
+
+```powershell
+python -m vrcdj.run --dry-run --verbose --show-controls   # 送らずに表示だけ
+python -m vrcdj.run --replay logs\midi-xxxx.jsonl --dry-run --verbose   # 記録したログを再生
+```
+
+アバターに届いているかは、別の PowerShell で `python -m vrcdj.osctest listen` を動かすと、VRChat から返ってくる値で確認できます。
 
 ## テスト(開発用)
 
