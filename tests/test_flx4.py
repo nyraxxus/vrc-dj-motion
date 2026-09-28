@@ -71,3 +71,10 @@ def test_button_press_and_release():
 def test_unknown_messages():
     assert lookup(cc(4, 81, 21)) is None
     assert lookup(mido.Message("clock")) is None
+
+
+def test_load_with_shift():
+    control, _ = lookup(note(6, 104))
+    assert control.id == "mixer.load1" and control.shift and control.hand == LEFT
+    control, _ = lookup(note(6, 122))
+    assert control.id == "mixer.load2" and control.shift and control.hand == RIGHT

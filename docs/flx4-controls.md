@@ -1,6 +1,6 @@
 # DDJ-FLX4 操作一覧
 
-`vrcdj/flx4.py` が解読する操作の一覧です。2026-09-28 に実機(rekordbox 7.2.18 起動中)で全操作を触ったログと、Mixxx の FLX4 マッピングを突き合わせて作りました。「(推定)」はログ上の位置から推測した名前です。
+`vrcdj/flx4.py` が解読する操作の一覧です。2026-09-28 に実機(rekordbox 7.2.18 起動中)で全操作を触ったログと、Mixxx の FLX4 マッピングを突き合わせて作りました。名前はすべて実機で確認済みです。
 
 MIDI ch は 1 から数えた番号です(プログラム内部は 0 から)。値の種類: ボタン=押す/離す、つまみ・フェーダー=0.0〜1.0、ジョグ・ロータリー=回転量。
 
@@ -69,16 +69,16 @@ MIDI ch は 1 から数えた番号です(プログラム内部は 0 から)。�
 | EQ MID | CC 11 / 43 | 14bit |
 | EQ LOW | CC 15 / 47 | 14bit |
 | チャンネルフェーダー | CC 19 / 51 | 14bit |
-| フェーダースタート(推定) +SHIFT | note 82 | ボタン |
+| フェーダースタート +SHIFT | note 82 | ボタン |
 | ヘッドホン CUE | note 84 | ボタン |
-| フェーダースタート(推定) +SHIFT | note 102 | ボタン |
+| フェーダースタート +SHIFT | note 102 | ボタン |
 | ヘッドホン CUE +SHIFT | note 104 | ボタン |
 
 ## ミキサー(ch7)
 
 | 操作 | 番号 | 種類 |
 |---|---|---|
-| MIC LEVEL(推定) | CC 5 / 37 | 14bit |
+| MIC LEVEL | CC 5 / 37 | 14bit |
 | MASTER LEVEL | CC 8 / 40 | 14bit |
 | HEADPHONES MIXING | CC 12 / 44 | 14bit |
 | HEADPHONES LEVEL | CC 13 / 45 | 14bit |
@@ -87,17 +87,18 @@ MIDI ch は 1 から数えた番号です(プログラム内部は 0 から)。�
 | クロスフェーダー | CC 31 / 63 | 14bit |
 | ロータリーセレクター | CC 64 | 回転量 |
 | ロータリーセレクター +SHIFT | CC 100 | 回転量 |
-| SMART CFX(推定) | note 0 | ボタン |
-| SMART FADER(推定) | note 1 | ボタン |
-| SMART CFX(推定) +SHIFT | note 8 | ボタン |
-| SMART FADER(推定) +SHIFT | note 9 | ボタン |
+| SMART CFX | note 0 | ボタン |
+| SMART FADER | note 1 | ボタン |
+| SMART CFX +SHIFT | note 8 | ボタン |
+| SMART FADER +SHIFT | note 9 | ボタン |
 | ロータリーセレクター押し | note 65 | ボタン |
 | ロータリーセレクター押し +SHIFT | note 66 | ボタン |
 | LOAD(左デッキ) | note 70 | ボタン |
 | LOAD(右デッキ) | note 71 | ボタン |
-| MASTER CUE(推定) | note 99 | ボタン |
-| MASTER CUE(推定) +SHIFT | note 120 | ボタン |
-| LOAD(左デッキ) +SHIFT | note 122 | ボタン |
+| MASTER CUE | note 99 | ボタン |
+| LOAD(左デッキ) +SHIFT | note 104 | ボタン |
+| MASTER CUE +SHIFT | note 120 | ボタン |
+| LOAD(右デッキ) +SHIFT | note 122 | ボタン |
 
 ## BEAT FX(ch5 / ch6)
 

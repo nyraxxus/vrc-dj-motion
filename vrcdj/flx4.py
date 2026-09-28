@@ -2,7 +2,7 @@
 
 対応表は、実機で全部の操作を触って記録したログ(rekordbox 起動中)と、
 Mixxx 同梱の FLX4 マッピングを突き合わせて作った。
-名前に「(推定)」とある操作は、ログ上の位置から推測したもの。
+名前はすべて実機で確認済み(2026-09-28)。
 
 使い方:
     decoder = FLX4Decoder()
@@ -81,8 +81,8 @@ _DECK_NOTES = {
 _STRIP_NOTES = {
     84: ("cue", "ヘッドホン CUE", False),
     104: ("cue", "ヘッドホン CUE", True),
-    82: ("fader_start", "フェーダースタート(推定)", True),
-    102: ("fader_start", "フェーダースタート(推定)", True),
+    82: ("fader_start", "フェーダースタート", True),
+    102: ("fader_start", "フェーダースタート", True),
 }
 
 # デッキの ch の CC: MSB 番号 -> (id, 名前, 種類, エリア)。LSB は MSB+32
@@ -115,7 +115,7 @@ _PAD_MODES = {
 
 # ミキサー(ch7)
 _MIXER_14BIT = {
-    5: ("mic_level", "MIC LEVEL(推定)", KNOB, EITHER),
+    5: ("mic_level", "MIC LEVEL", KNOB, EITHER),
     8: ("master_level", "MASTER LEVEL", KNOB, EITHER),
     12: ("hp_mix", "HEADPHONES MIXING", KNOB, EITHER),
     13: ("hp_level", "HEADPHONES LEVEL", KNOB, EITHER),
@@ -128,17 +128,18 @@ _MIXER_ENCODERS = {
     100: ("browse", "ロータリーセレクター", True),
 }
 _MIXER_NOTES = {
-    0: ("smart_cfx", "SMART CFX(推定)", False),
-    8: ("smart_cfx", "SMART CFX(推定)", True),
-    1: ("smart_fader", "SMART FADER(推定)", False),
-    9: ("smart_fader", "SMART FADER(推定)", True),
+    0: ("smart_cfx", "SMART CFX", False),
+    8: ("smart_cfx", "SMART CFX", True),
+    1: ("smart_fader", "SMART FADER", False),
+    9: ("smart_fader", "SMART FADER", True),
     65: ("browse_press", "ロータリーセレクター押し", False),
     66: ("browse_press", "ロータリーセレクター押し", True),
     70: ("load1", "LOAD(左デッキ)", False),
-    122: ("load1", "LOAD(左デッキ)", True),
+    104: ("load1", "LOAD(左デッキ)", True),
     71: ("load2", "LOAD(右デッキ)", False),
-    99: ("master_cue", "MASTER CUE(推定)", False),
-    120: ("master_cue", "MASTER CUE(推定)", True),
+    122: ("load2", "LOAD(右デッキ)", True),
+    99: ("master_cue", "MASTER CUE", False),
+    120: ("master_cue", "MASTER CUE", True),
 }
 
 # BEAT FX(ch5 / ch6)
