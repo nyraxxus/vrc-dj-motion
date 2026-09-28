@@ -138,8 +138,8 @@ _MIXER_NOTES = {
     104: ("load1", "LOAD(左デッキ)", True),
     71: ("load2", "LOAD(右デッキ)", False),
     122: ("load2", "LOAD(右デッキ)", True),
-    99: ("master_cue", "MASTER CUE(推定)", False),
-    120: ("master_cue", "MASTER CUE(推定)", True),
+    99: ("master_cue", "MASTER CUE", False),
+    120: ("master_cue", "MASTER CUE", True),
 }
 
 # BEAT FX(ch5 / ch6)

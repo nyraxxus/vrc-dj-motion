@@ -95,9 +95,9 @@ MIDI ch は 1 から数えた番号です(プログラム内部は 0 から)。�
 | ロータリーセレクター押し +SHIFT | note 66 | ボタン |
 | LOAD(左デッキ) | note 70 | ボタン |
 | LOAD(右デッキ) | note 71 | ボタン |
-| MASTER CUE(推定) | note 99 | ボタン |
+| MASTER CUE | note 99 | ボタン |
 | LOAD(左デッキ) +SHIFT | note 104 | ボタン |
-| MASTER CUE(推定) +SHIFT | note 120 | ボタン |
+| MASTER CUE +SHIFT | note 120 | ボタン |
 | LOAD(右デッキ) +SHIFT | note 122 | ボタン |
 
 ## BEAT FX(ch5 / ch6)
