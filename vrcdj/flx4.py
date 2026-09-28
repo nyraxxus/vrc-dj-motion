@@ -2,7 +2,7 @@
 
 対応表は、実機で全部の操作を触って記録したログ(rekordbox 起動中)と、
 Mixxx 同梱の FLX4 マッピングを突き合わせて作った。
-名前に「(推定)」とある操作は、ログ上の位置から推測したもの。
+名前はすべて実機で確認済み(2026-09-28)。
 
 使い方:
     decoder = FLX4Decoder()
@@ -81,8 +81,8 @@ _DECK_NOTES = {
 _STRIP_NOTES = {
     84: ("cue", "ヘッドホン CUE", False),
     104: ("cue", "ヘッドホン CUE", True),
-    82: ("fader_start", "フェーダースタート(推定)", True),
-    102: ("fader_start", "フェーダースタート(推定)", True),
+    82: ("fader_start", "フェーダースタート", True),
+    102: ("fader_start", "フェーダースタート", True),
 }
 
 # デッキの ch の CC: MSB 番号 -> (id, 名前, 種類, エリア)。LSB は MSB+32
