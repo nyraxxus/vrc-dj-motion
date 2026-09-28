@@ -10,12 +10,13 @@ VRChat はデスクトップモード、DJ ソフトは rekordbox(予備に Mixx
 
 ## セットアップ(Windows 11)
 
-1. [Python 3.11 以上](https://www.python.org/downloads/) をインストール(「Add python.exe to PATH」にチェック)
+1. [Python 3.12](https://www.python.org/downloads/) をインストール(「Add python.exe to PATH」にチェック)
+   - MIDI ライブラリ(python-rtmidi)が Windows 向けに配布しているのは Python 3.12 までです。3.13 以降だとインストールでエラーになります。
 2. このリポジトリを取得して、フォルダで PowerShell を開く
 3. 必要なライブラリを入れる
 
 ```powershell
-py -m venv .venv
+py -3.12 -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
