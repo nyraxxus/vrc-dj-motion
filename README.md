@@ -3,10 +3,13 @@
 DDJ-FLX4 の MIDI 入力に合わせて、VRChat アバターを OSC で「それっぽく」動かすためのプログラムです。
 VRChat はデスクトップモード、DJ ソフトは rekordbox(予備に Mixxx)を想定しています。
 
-今入っているのは、本体を作る前の確認用ツール 2 つです。
+今入っているのは、本体を作る前の確認用ツールと、FLX4 の操作の解読部分です。
 
 - `vrcdj.monitor`: FLX4 から届く MIDI を表示・記録する
 - `vrcdj.osctest`: VRChat に OSC を送る、VRChat から届く OSC を表示する
+- `vrcdj.flx4`: FLX4 の MIDI を「どの操作か」に変換する(一覧は [docs/flx4-controls.md](docs/flx4-controls.md))
+
+`vrcdj.monitor` は、FLX4 の操作名も一緒に表示します。
 
 ## セットアップ(Windows 11)
 

@@ -20,6 +20,8 @@ from pathlib import Path
 
 import mido
 
+from vrcdj.flx4 import lookup
+
 DEFAULT_PORT_HINT = "FLX4"
 
 
@@ -53,6 +55,15 @@ def receive(port, interval: float = 0.002):
     while True:
         yield from port.iter_pending()
         time.sleep(interval)
+
+
+def control_name(msg: mido.Message) -> str:
+    """FLX4 の操作名。LSB など表示しなくてよいものや未知のものは空文字。"""
+    found = lookup(msg)
+    if found is None or found[1] == "lsb":
+        return ""
+    control, _ = found
+    return control.name + (" +SHIFT" if control.shift else "")
 
 
 def to_record(msg: mido.Message, elapsed: float) -> dict:
@@ -110,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
                 if msg.type in hidden:
                     continue
                 elapsed = time.perf_counter() - start
-                print(f"{elapsed:9.3f}s  {describe(msg)}")
+                print(f"{elapsed:9.3f}s  {describe(msg)}  {control_name(msg)}".rstrip())
                 if log_file:
                     log_file.write(json.dumps(to_record(msg, elapsed)) + "\n")
                     log_file.flush()
