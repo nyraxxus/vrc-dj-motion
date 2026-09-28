@@ -73,7 +73,7 @@ python -m vrcdj.osctest param DJ_Active true  # true / false
 
 ## 本体を動かす
 
-アバター側に `docs/avatar-parameters.md` のパラメーターを用意してから使います。
+アバター側に `docs/avatar-parameters.md` のパラメーターを用意してから使います。Unity での作業手順は [docs/unity-setup.md](docs/unity-setup.md) にあります。
 
 ```powershell
 python -m vrcdj.run --verbose
