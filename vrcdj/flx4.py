@@ -135,8 +135,9 @@ _MIXER_NOTES = {
     65: ("browse_press", "ロータリーセレクター押し", False),
     66: ("browse_press", "ロータリーセレクター押し", True),
     70: ("load1", "LOAD(左デッキ)", False),
-    122: ("load1", "LOAD(左デッキ)", True),
+    104: ("load1", "LOAD(左デッキ)", True),
     71: ("load2", "LOAD(右デッキ)", False),
+    122: ("load2", "LOAD(右デッキ)", True),
     99: ("master_cue", "MASTER CUE(推定)", False),
     120: ("master_cue", "MASTER CUE(推定)", True),
 }
