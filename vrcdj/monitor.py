@@ -44,6 +44,17 @@ def describe(msg: mido.Message) -> str:
     return f"{ch_text} {msg}"
 
 
+def receive(port, interval: float = 0.002):
+    """ポートからメッセージを取り出し続ける。
+
+    `for msg in port` だと Windows ではメッセージ待ちの間 Ctrl+C が効かないので、
+    短い間隔でポーリングして KeyboardInterrupt を受け取れるようにしている。
+    """
+    while True:
+        yield from port.iter_pending()
+        time.sleep(interval)
+
+
 def to_record(msg: mido.Message, elapsed: float) -> dict:
     record = {"t": round(elapsed, 4)}
     record.update(msg.dict())
@@ -95,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
     start = time.perf_counter()
     try:
         with port:
-            for msg in port:
+            for msg in receive(port):
                 if msg.type in hidden:
                     continue
                 elapsed = time.perf_counter() - start

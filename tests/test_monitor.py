@@ -15,8 +15,12 @@ class FakePort:
     def __exit__(self, *exc):
         return False
 
-    def __iter__(self):
-        return iter(self.messages)
+    def iter_pending(self):
+        # 1 回目で全メッセージを返し、2 回目で Ctrl+C を押したことにする
+        if self.messages is None:
+            raise KeyboardInterrupt
+        messages, self.messages = self.messages, None
+        return iter(messages)
 
 
 def test_find_port_is_case_insensitive():
@@ -44,6 +48,7 @@ def test_main_prints_and_logs_messages(monkeypatch, tmp_path, capsys):
     assert monitor.main(["--log"]) == 0
 
     out = capsys.readouterr().out
+    assert "終了しました" in out
     assert "監視中: DDJ-FLX4 0" in out
     assert "clock" not in out.split("監視中")[1]
     logs = list((tmp_path / "logs").glob("midi-*.jsonl"))
