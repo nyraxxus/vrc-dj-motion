@@ -146,5 +146,6 @@ python -m vrcdj.run --verbose
 ## よくあるつまずき
 
 - **指だけ動いて腕が動かない**: アバターマスクで腕の部分が赤のままになっているか、ステートに VRC Animator Tracking Control(Left Hand を Animation)が付いていません。手順「4」と「5」の 5 番を確認してください。
+- **Tracking Control もマスクも合っているのに腕だけ動かない**: VRChat の Gesture レイヤーでは、**一番上のレイヤーのマスクが Gesture 全体に効きます**。アバターの Gesture 用 Animator Controller(VRC Avatar Descriptor → Playable Layers → Gesture)を開き、一番上のレイヤー(多くは「AllParts」)のマスクが「手だけ」になっていたら、左右の腕と手を緑にしたマスク(例: `DJ_ArmsHands`)に差し替えてください。アバター付属のファイルを書き換えるので、先に Ctrl+D で複製してバックアップを取ります。
 - **DJ_Active をオフにしても腕が固まったまま**: Write Defaults がオフのアバターでは、空の `Off` ステートに入っても直前のポーズが残ります。`Off` ステートに VRC Animator Layer Control を付けて、このレイヤーの Weight を 0 にしてください(`Idle` などには Weight 1 に戻す Layer Control を付けます)。
 - **VRChat でパラメーターが届かない**: OSC の設定ファイルが古いアバターのままのことがあります。OSC の Reset Config をしてから、アバターを着直してください。
