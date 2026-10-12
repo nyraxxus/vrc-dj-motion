@@ -57,16 +57,17 @@ VRChat のアバターは Humanoid なので、腕や指を動かすアニメー
 
 ## 4. アバターマスクを作る
 
-Assets を右クリック → Create → Avatar Mask で 2 つ作ります。
+Assets を右クリック → Create → Avatar Mask で 3 つ作ります。
 
 - `DJ_LeftArm`: Humanoid の図で**左腕と左手(IK は不要)だけ**を緑にして、ほかは全部赤。肩から肘・手首までの「腕」の部分と、その先の「手」の部分は別々にクリックするので、両方とも緑になっているか確認します
 - `DJ_RightArm`: 右腕と右手だけを緑
-
-これで、左手のレイヤーが右手や体を動かさなくなります。
+- `DJ_None`: 全部赤(IK の丸も赤)。何も動かさない身代わりのレイヤー用です
 
 ## 5. Animator Controller を作る
 
-Assets を右クリック → Create → Animator Controller で `DJ_Gesture` を作ります。
+DJ の動きは、VRChat のエモートと同じ **Action レイヤー**に入れます。Action は使っていないときに重みを 0 にでき、そのときは元の歩き・待機の動きに完全に戻ります。Gesture レイヤーに腕を入れると、DJ オフのときに腕が固まるので使いません。
+
+Assets を右クリック → Create → Animator Controller で `DJ_Gesture` を作ります(名前は Gesture ですが、組み込み先は Action です)。
 
 **パラメーター**(Animator ウィンドウの Parameters タブで追加。名前と型を正確に):
 
@@ -79,40 +80,62 @@ Assets を右クリック → Create → Animator Controller で `DJ_Gesture` �
 | DJ_ValueR | Float | 0.5 |
 | DJ_XFader | Float | 0.5 |
 
-**レイヤー「DJ Left」**(最初からある Base Layer を名前変更して使って大丈夫です)
+**レイヤーは上から次の順に並べます。** Layer Control で指定する番号は、上から 0, 1, 2… です。
 
-1. レイヤーの歯車から Weight を 1、Mask を `DJ_LeftArm` にする
-2. ステートを 4 つ作る
-   - `Off`(Motion なし)
+| 番号 | レイヤー | Weight | Mask | 中身 |
+|---|---|---|---|---|
+| 0 | DJ None | 1(変えられない) | `DJ_None` | ステートなし |
+| 1 | DJ Body | 0 | なし | `Stand` ステート 1 つ |
+| 2 | DJ Left | 0 | `DJ_LeftArm` | 下の 4 ステート |
+| 3 | DJ Right | 0 | `DJ_RightArm` | DJ Left の右手版 |
+
+一番上のレイヤーは Weight を変えられないので、何も動かさない「DJ None」を身代わりに置きます。
+
+**レイヤー「DJ Body」**(DJ 中の体の土台)
+
+- ステート `Stand` を 1 つ作り、Motion に `proxy_stand_still` を入れる。Project の検索欄で検索範囲を **All**(または In Packages)にすると、VRChat SDK の中に見つかります。VRChat の標準の立ち姿(軽く呼吸する)に置き換わります。自作の立ちポーズだと、記録が足りないと手足を少し曲げた不自然な姿勢になります
+
+**レイヤー「DJ Left」**
+
+1. ステートを 4 つ作る
+   - `Off`(Motion: `L_Idle`。空にすると SDK が警告を出すのと、DJ オフにしたとき手がなめらかに戻るため)
    - `Idle`(Motion: `L_Idle`)
    - `Cue`(Motion: `L_Cue`)
    - `XFader`(Motion: ブレンドツリー。右クリック → Create State → From New Blend Tree。中を 1D にして Parameter を `DJ_ValueL`、Motion に `L_XFader_Left`(Threshold 0)と `L_XFader_Right`(Threshold 1)を入れる)
-3. `Off` をデフォルトステート(オレンジ)にする
-4. 遷移を Any State から作る。すべて Has Exit Time のチェックを外し、Transition Duration を 0.1、**Can Transition To Self のチェックを外す**
+2. `Off` をデフォルトステート(オレンジ)にする
+3. 遷移を Any State から作る。すべて Has Exit Time のチェックを外し、Transition Duration を 0.1、**Can Transition To Self のチェックを外す**
    - Any State → `Off`: 条件 `DJ_Active` false
    - Any State → `Idle`: 条件 `DJ_Active` true、`DJ_HandL` Equals 0
    - Any State → `Cue`: 条件 `DJ_Active` true、`DJ_HandL` Equals 1
    - Any State → `XFader`: 条件 `DJ_Active` true、`DJ_HandL` Equals 11
-5. **腕をアニメーションで動かす設定**: VRChat の Gesture レイヤーは、初期設定では指しかアニメーションで動かせず、腕はトラッキングが優先されます(Gesture Manager も同じ動きをします)。ステートを選んで Inspector の Add Behaviour から **VRC Animator Tracking Control** を追加し、次のように設定します。
-   - `Off` 以外のステート(`Idle`・`Cue`・`XFader`): **Left Hand** と **Left Fingers** を **Animation**
-   - `Off`: **Left Hand** と **Left Fingers** を **Tracking**(DJ_Active がオフのとき腕を元に戻すため)
+4. ステートに Behaviour を付ける(Inspector の Add Behaviour から)
+   - **`Off`**
+     - VRC Animator Tracking Control: **全部 Tracking**
+     - VRC Playable Layer Control: Layer **Action**、Goal Weight **0**、Blend Duration **0.2**
+     - VRC Animator Layer Control: Playable **Action**、Layer **1**、Goal Weight **0**(DJ Right を作ったら Layer **3** の分も追加)
+     - VRC Animator Layer Control: Playable **Action**、Layer **2**、Goal Weight **0**
+   - **`Off` 以外(`Idle`・`Cue`・`XFader`)**
+     - VRC Animator Tracking Control: **Hip・Left Foot・Right Foot・Left Hand・Right Hand・Left Fingers・Right Fingers** を **Animation**(Head・Eyes・Mouth は Tracking のまま)
+     - 上の 3 つ(DJ Right があれば 4 つ)の Layer Control を同じように付け、Goal Weight を **1**、Blend Duration を **0.1** にする
 
-**レイヤー「DJ Right」**: 同じものを右手用に作ります(Mask は `DJ_RightArm`、パラメーターは `DJ_HandR` / `DJ_ValueR`、クリップは `R_`、Tracking Control は Right Hand と Right Fingers)。
+**レイヤー「DJ Right」**: 同じものを右手用に作ります(Mask は `DJ_RightArm`、パラメーターは `DJ_HandR` / `DJ_ValueR`、クリップは `R_`)。Behaviour は DJ Left と同じ内容にします。どちらの手のステートからでも、DJ のオン・オフで全レイヤーがそろって切り替わるようにするためです。
 
-**Write Defaults について**: アバターの既存の Animator が Write Defaults をオンにしているかオフにしているかに合わせてください。Modular Avatar の設定で合わせることもできます(次の手順)。
+DJ 中は体全体を Action が受け持つので、歩いても足は動きません(卓の前に立っている前提です)。
 
 ## 6. Modular Avatar でアバターに組み込む
+
+VRC Avatar Descriptor の Playable Layers(Base・Gesture など)は、アバター付属のままにしておきます。DJ 用に書き換える必要はありません。
 
 「DJ Motion」GameObject に次の 2 つのコンポーネントを追加します。
 
 - **MA Merge Animator**
-  - Animator: `DJ_Gesture`
-  - Layer Type: **Gesture**
+  - Animator to merge: `DJ_Gesture`
+  - Layer Type: **Action**
   - Path Mode: Absolute
-  - Match Avatar Write Defaults: オン
-- **MA Parameters**: 上の 6 つのパラメーターを追加し、すべて同期(Synced)にする。初期値は表のとおり。
+  - Match Avatar Write Defaults: オフ
+- **MA Parameters**: 上の 6 つのパラメーターを追加し、すべて **Synced にして、Saved のチェックは外す**。初期値は表のとおり(`DJ_Active` はオフ)。Saved がオンだと、前回 DJ オンのままアバターを着替えたとき、次に着た直後から DJ オンになってしまいます。
 
-これでアップロード時に、アバターの Gesture レイヤーと Expression Parameters に自動で追加されます。
+これでアップロード時に、アバターの Action レイヤーと Expression Parameters に自動で追加されます。
 
 ## 7. Unity の中でテストする
 
@@ -145,7 +168,10 @@ python -m vrcdj.run --verbose
 
 ## よくあるつまずき
 
-- **指だけ動いて腕が動かない**: アバターマスクで腕の部分が赤のままになっているか、ステートに VRC Animator Tracking Control(Left Hand を Animation)が付いていません。手順「4」と「5」の 5 番を確認してください。
-- **Tracking Control もマスクも合っているのに腕だけ動かない**: VRChat の Gesture レイヤーでは、**一番上のレイヤーのマスクが Gesture 全体に効きます**。アバターの Gesture 用 Animator Controller(VRC Avatar Descriptor → Playable Layers → Gesture)を開き、一番上のレイヤー(多くは「AllParts」)のマスクが「手だけ」になっていたら、左右の腕と手を緑にしたマスク(例: `DJ_ArmsHands`)に差し替えてください。アバター付属のファイルを書き換えるので、先に Ctrl+D で複製してバックアップを取ります。
-- **DJ_Active をオフにしても腕が固まったまま**: Write Defaults がオフのアバターでは、空の `Off` ステートに入っても直前のポーズが残ります。`Off` ステートに VRC Animator Layer Control を付けて、このレイヤーの Weight を 0 にしてください(`Idle` などには Weight 1 に戻す Layer Control を付けます)。
+- **指だけ動いて腕が動かない**: アバターマスクで腕の部分が赤のままになっているか、ステートに VRC Animator Tracking Control(Left Hand を Animation)が付いていません。手順「4」と「5」を確認してください。
+- **DJ オフのときに腕が固まる・歩いても腕が振れない**: MA Merge Animator の Layer Type が Gesture のままになっていないか確認してください。Gesture に入れると、オフのときに腕を元の動きへ戻せません。Action にします。
+- **DJ オフにしても DJ の立ち姿のまま**: `Off` ステートに VRC Playable Layer Control(Action、Goal Weight 0)が付いているか確認してください。
+- **アバターを着た直後から DJ オンになっている**: MA Parameters で DJ のパラメーターの Saved がオンになっています。外して発行し直してください。すぐ直したいときは、本体を起動して Ctrl+C で止めると `DJ_Active` がオフで送られます。
+- **DJ 中に左手以外が手足を少し曲げた姿勢になる**: `Stand` の Motion が自作の立ちポーズになっています。`proxy_stand_still` に替えてください。
+- **アップロード画面に「Write Defaults disabled ... missing or empty」の警告が出る**: 発行は止まらない注意書きです。DJ のレイヤーなら、`Off` ステートに `L_Idle` を入れると消えます。アバター付属のレイヤーが原因のこともあり、その場合は放っておいて大丈夫です。**Auto Fix は押さないでください**。設定を勝手に書き換え、かえって動かなくなることがあります。
 - **VRChat でパラメーターが届かない**: OSC の設定ファイルが古いアバターのままのことがあります。OSC の Reset Config をしてから、アバターを着直してください。
