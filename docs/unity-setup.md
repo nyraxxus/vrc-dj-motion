@@ -59,7 +59,7 @@ VRChat のアバターは Humanoid なので、腕や指を動かすアニメー
 
 Assets を右クリック → Create → Avatar Mask で 2 つ作ります。
 
-- `DJ_LeftArm`: Humanoid の図で**左腕と左手(IK は不要)だけ**を緑にして、ほかは全部赤
+- `DJ_LeftArm`: Humanoid の図で**左腕と左手(IK は不要)だけ**を緑にして、ほかは全部赤。肩から肘・手首までの「腕」の部分と、その先の「手」の部分は別々にクリックするので、両方とも緑になっているか確認します
 - `DJ_RightArm`: 右腕と右手だけを緑
 
 これで、左手のレイヤーが右手や体を動かさなくなります。
@@ -93,8 +93,11 @@ Assets を右クリック → Create → Animator Controller で `DJ_Gesture` �
    - Any State → `Idle`: 条件 `DJ_Active` true、`DJ_HandL` Equals 0
    - Any State → `Cue`: 条件 `DJ_Active` true、`DJ_HandL` Equals 1
    - Any State → `XFader`: 条件 `DJ_Active` true、`DJ_HandL` Equals 11
+5. **腕をアニメーションで動かす設定**: VRChat の Gesture レイヤーは、初期設定では指しかアニメーションで動かせず、腕はトラッキングが優先されます(Gesture Manager も同じ動きをします)。ステートを選んで Inspector の Add Behaviour から **VRC Animator Tracking Control** を追加し、次のように設定します。
+   - `Off` 以外のステート(`Idle`・`Cue`・`XFader`): **Left Hand** と **Left Fingers** を **Animation**
+   - `Off`: **Left Hand** と **Left Fingers** を **Tracking**(DJ_Active がオフのとき腕を元に戻すため)
 
-**レイヤー「DJ Right」**: 同じものを右手用に作ります(Mask は `DJ_RightArm`、パラメーターは `DJ_HandR` / `DJ_ValueR`、クリップは `R_`)。
+**レイヤー「DJ Right」**: 同じものを右手用に作ります(Mask は `DJ_RightArm`、パラメーターは `DJ_HandR` / `DJ_ValueR`、クリップは `R_`、Tracking Control は Right Hand と Right Fingers)。
 
 **Write Defaults について**: アバターの既存の Animator が Write Defaults をオンにしているかオフにしているかに合わせてください。Modular Avatar の設定で合わせることもできます(次の手順)。
 
@@ -142,5 +145,6 @@ python -m vrcdj.run --verbose
 
 ## よくあるつまずき
 
+- **指だけ動いて腕が動かない**: アバターマスクで腕の部分が赤のままになっているか、ステートに VRC Animator Tracking Control(Left Hand を Animation)が付いていません。手順「4」と「5」の 5 番を確認してください。
 - **DJ_Active をオフにしても腕が固まったまま**: Write Defaults がオフのアバターでは、空の `Off` ステートに入っても直前のポーズが残ります。`Off` ステートに VRC Animator Layer Control を付けて、このレイヤーの Weight を 0 にしてください(`Idle` などには Weight 1 に戻す Layer Control を付けます)。
 - **VRChat でパラメーターが届かない**: OSC の設定ファイルが古いアバターのままのことがあります。OSC の Reset Config をしてから、アバターを着直してください。
